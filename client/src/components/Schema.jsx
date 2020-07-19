@@ -14,7 +14,12 @@ import { FiKey } from "react-icons/fi";
 import { MdRefresh } from "react-icons/md";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import { Typography, IconButton, Divider } from "@material-ui/core";
+import {
+  Typography,
+  IconButton,
+  Divider,
+  ListSubheader,
+} from "@material-ui/core";
 import { FaDatabase } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +37,14 @@ const useStyles = makeStyles((theme) => ({
     color: "inherit",
   },
   icon: {
+    marginRight: theme.spacing(1),
+  },
+  iconLeft: {
     marginLeft: theme.spacing(1),
+  },
+  iconTextContainer: {
+    display: "flex",
+    alignItems: "center",
   },
   iconRotate: {
     marginLeft: theme.spacing(2),
@@ -56,6 +68,7 @@ function Table({ tableName }) {
   const handleClick = () => setOpen(!isOpen);
   return (
     <React.Fragment>
+      {/* <ListSubheader */}
       <ListItem button onClick={handleClick}>
         <ListItemIcon>
           <RiTableLine size="25" />
@@ -70,9 +83,9 @@ function Table({ tableName }) {
               <ListItem key={index} className={classes.nested} dense>
                 <ListItemText primary={`${attr.name}: ${attr.type}`} />
                 {attr.pk || attr.fk ? (
-                  <ListItemIcon>
+                  <ListItemIcon className={classes.iconTextContainer}>
                     <Typography>{attr.pk ? "PK" : "FK"}</Typography>
-                    <FiKey className={classes.icon} />
+                    <FiKey className={classes.iconLeft} />
                   </ListItemIcon>
                 ) : null}
               </ListItem>
@@ -85,20 +98,30 @@ function Table({ tableName }) {
 }
 
 export default function Schema({ dbName }) {
-  const tables = ["Students", "Staff", "Classes", "Staff"];
+  const classes = useStyles();
+  const tables = ["Students", "Staff", "Classes", "Societies"];
   return (
-    <List component="nav">
+    <React.Fragment>
       <SimpleSelect />
       <Divider />
-      {/* Add colour coding here - different colour for table, attribute,
+      <List
+        component="nav"
+        subheader={
+          <ListSubheader disableSticky className={classes.iconTextContainer}>
+            <RiTableLine className={classes.icon} /> Schema
+          </ListSubheader>
+        }
+      >
+        {/* Add colour coding here - different colour for table, attribute,
           relationship, built in functions
           Use css circles to create color identifier
           Also include a legend somewhere - probably above title */}
-      {tables.map((table, index) => (
-        <Table key={index} tableName={table} />
-      ))}
-      <Divider />
-    </List>
+        {tables.map((table, index) => (
+          <Table key={index} tableName={table} />
+        ))}
+        <Divider />
+      </List>
+    </React.Fragment>
   );
 }
 

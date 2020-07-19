@@ -7,8 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import Schema from "./components/Schema";
 import ButtonAppBar from "./components/AppBar";
 import Search from "./components/Search";
+import Relationships from "./components/Relationships";
 
-const drawerWidth = 240;
+const drawerWidth = 275;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,7 @@ export default function Content() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <Schema dbName="UCL CS" />
+          <Relationships />
         </div>
       </Drawer>
       <main className={classes.content}>
