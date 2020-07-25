@@ -13,10 +13,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
-  mainContainer: {
-    display: "flex",
-    flexDirection: "row",
-  },
   textField: {
     margin: theme.spacing(1),
   },
@@ -44,13 +40,11 @@ export default function FormDialog({ title, open, setOpen }) {
       <Dialog open={open} onClose={handleClose} disableBackdropClick>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {/* <div className={classes.mainContainer}> */}
           <div className={classes.inputContainer}>
             <DialogContentText>
               Enter the information below to connect to a remote database
             </DialogContentText>
             {inputInfo.map((info, idx) => (
-              <React.Fragment>
                 <TextField
                   key={idx}
                   className={classes.textField}
@@ -61,15 +55,13 @@ export default function FormDialog({ title, open, setOpen }) {
                   variant="outlined"
                   type={info.label === "Password" ? "password" : null}
                 />
-              </React.Fragment>
             ))}
           </div>
-          {/* </div> */}
           <DialogActions>
             <Button onClick={handleClose} variant="outlined" color="primary">
               Cancel
             </Button>
-            <Button onClick={handleClose} variant="outlined" color="primary">
+            <Button onClick={handleClose} variant="contained" color="primary">
               Confirm
             </Button>
           </DialogActions>

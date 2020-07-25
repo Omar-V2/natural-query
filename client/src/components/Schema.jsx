@@ -68,7 +68,6 @@ function Table({ tableName }) {
   const handleClick = () => setOpen(!isOpen);
   return (
     <React.Fragment>
-      {/* <ListSubheader */}
       <ListItem button onClick={handleClick}>
         <ListItemIcon>
           <RiTableLine size="25" />
@@ -79,7 +78,6 @@ function Table({ tableName }) {
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {attibutes.map((attr, index) => (
-            <React.Fragment>
               <ListItem key={index} className={classes.nested} dense>
                 <ListItemText primary={`${attr.name}: ${attr.type}`} />
                 {attr.pk || attr.fk ? (
@@ -89,7 +87,6 @@ function Table({ tableName }) {
                   </ListItemIcon>
                 ) : null}
               </ListItem>
-            </React.Fragment>
           ))}
         </List>
       </Collapse>

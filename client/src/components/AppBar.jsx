@@ -6,9 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { FaDatabase } from "react-icons/fa";
 import { MdTranslate, MdEdit } from "react-icons/md";
-import { GrTransaction } from "react-icons/gr";
 import { BsPlug } from "react-icons/bs";
 import FormDialog from "./Dialog";
+import { RiArrowLeftRightLine } from "react-icons/ri";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,10 +42,10 @@ export default function ButtonAppBar({ title }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" color="tertiary" className={classes.appBar}>
+      <AppBar position="fixed" color="inherit" className={classes.appBar}>
         <Toolbar variant="dense">
           <MdTranslate size="25" />
-          <GrTransaction size="25" />
+          <RiArrowLeftRightLine size="25" />
           <FaDatabase size="25" />
           <Typography
             variant="h6"
