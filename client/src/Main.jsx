@@ -8,6 +8,7 @@ import Schema from "./components/Schema";
 import ButtonAppBar from "./components/AppBar";
 import Search from "./components/Search";
 import Relationships from "./components/Relationships";
+import ResultsTable from "./components/ResultTable";
 
 const drawerWidth = 275;
 
@@ -87,7 +88,7 @@ export default function Content() {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
-        {/* <RelationshipGraph /> */}
+        <ResultsTable />
       </main>
     </div>
   );

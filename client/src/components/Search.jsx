@@ -9,11 +9,11 @@ const options = [
 ];
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   width: "100%",
-  //   maxWidth: 600,
-  //   margin: "auto",
-  // },
+  root: {
+    width: "100%",
+    maxWidth: "75%",
+    margin: "auto",
+  },
 }));
 
 export default function Search() {
