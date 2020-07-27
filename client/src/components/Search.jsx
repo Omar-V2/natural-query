@@ -11,8 +11,8 @@ const options = [
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: "75%",
-    margin: "auto",
+    // maxWidth: "75%",
+    // margin: "auto",
   },
 }));
 

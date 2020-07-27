@@ -7,8 +7,25 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { TablePagination, withStyles } from "@material-ui/core";
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black[1],
+  },
+  body: {
+    fontSize: 24,
+  },
+}))(TableCell);
 
 const useStyles = makeStyles({
+  root: {
+    width: "100%",
+  },
+  container: {
+    maxHeight: 350,
+    minHeight: 350,
+  },
   table: {
     minWidth: 650,
   },
@@ -24,6 +41,14 @@ const rows = [
   createData("Eclair", 262, 16.0, 24, 6.0),
   createData("Cupcake", 305, 3.7, 67, 4.3),
   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
 const headers = ["Dessert", "Calories", "Fat", "Carbs", "Protein"];
@@ -31,35 +56,54 @@ const headers = ["Dessert", "Calories", "Fat", "Carbs", "Protein"];
 export default function ResultsTable() {
   const classes = useStyles();
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const handleChangePage = (event, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} size="small">
-        <TableHead>
-          <TableRow>
-            {headers.map((heading, index) => {
-              let align = index === 0 ? "inherit" : "right";
-              return (
-                <TableCell key={index} align={align}>
-                  {heading}
-                </TableCell>
-              );
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+    <Paper className={classes.root}>
+      <TableContainer component={Paper} className={classes.container}>
+        <Table stickyHeader className={classes.table} size="small">
+          <TableHead>
+            <TableRow>
+              {headers.map((heading, index) => {
+                let align = index === 0 ? "inherit" : "right";
+                return (
+                  <StyledTableCell key={index} align={align}>
+                    {heading}
+                  </StyledTableCell>
+                );
+              })}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell component="th" scope="row">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="right">{row.calories}</TableCell>
+                  <TableCell align="right">{row.fat}</TableCell>
+                  <TableCell align="right">{row.carbs}</TableCell>
+                  <TableCell align="right">{row.protein}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={rows.length}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+        rowsPerPage={rowsPerPage}
+      />
+    </Paper>
   );
 }
