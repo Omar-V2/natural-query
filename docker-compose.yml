@@ -1,0 +1,23 @@
+version: "3"
+services:
+  python:
+    build: ./server
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - 5000:5000
+    restart: on-failure:10
+    depends_on:
+      - sqldb
+  sqldb:
+    image: "postgres"
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=UCL
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  # mongodb:
+  # image: "mongo"
