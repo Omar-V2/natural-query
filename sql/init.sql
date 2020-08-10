@@ -24,9 +24,12 @@ CREATE TABLE IF NOT EXISTS Classes (
     FOREIGN KEY(staff_id) REFERENCES Staff(id)
 );
 
--- CREATE TABLE IF NOT EXISTS Societies (
-    -- id SERIAL PRIMARY KEY
--- )
+CREATE TABLE IF NOT EXISTS Societies (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(30),
+    student_id INTEGER,
+    FOREIGN KEY(student_id) REFERENCES Students(id)
+);
 
 CREATE TABLE IF NOT EXISTS Enrolments (
     id SERIAL PRIMARY KEY,

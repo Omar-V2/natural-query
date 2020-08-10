@@ -9,6 +9,7 @@ services:
     restart: on-failure:10
     depends_on:
       - sqldb
+      - mongodb
   sqldb:
     image: "postgres"
     ports:
@@ -19,5 +20,16 @@ services:
       - POSTGRES_DB=UCL
     volumes:
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-  # mongodb:
-  # image: "mongo"
+      - sql-db-data:/var/lib/postgresql/data
+  mongodb:
+    image: "mongo"
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    volumes:
+      - mongo-db-data:/data/db
+volumes:
+  mongo-db-data:
+  sql-db-data:
