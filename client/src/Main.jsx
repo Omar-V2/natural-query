@@ -1,4 +1,5 @@
 import React from "react";
+import { DatabaseContext } from "./App";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,6 +10,7 @@ import ButtonAppBar from "./components/AppBar";
 import Search from "./components/Search";
 import Relationships from "./components/Relationships";
 import ResultsTable from "./components/ResultTable";
+import { Button } from "@material-ui/core";
 
 const drawerWidth = 275;
 
@@ -41,9 +43,205 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TempDb = {
+  database: "UCL",
+  tables: [
+    {
+      name: "Other Staff",
+      columns: [
+        {
+          name: "id",
+          type: "INTEGER()",
+          "primary key": true,
+          "foreign key": false,
+        },
+        {
+          name: "fname",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "lname",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "age",
+          type: "INTEGER()",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "email",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+      ],
+      relationships: [
+        {
+          table: "classes",
+          "parent column": "id",
+          "foreign column": "staff_id",
+          identifier: null,
+        },
+      ],
+    },
+    {
+      name: "Other Classes",
+      columns: [
+        {
+          name: "id",
+          type: "INTEGER()",
+          "primary key": true,
+          "foreign key": false,
+        },
+        {
+          name: "name",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "code",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "location",
+          type: "VARCHAR(length=50)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "level",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "staff_id",
+          type: "INTEGER()",
+          "primary key": false,
+          "foreign key": true,
+        },
+      ],
+      relationships: [
+        {
+          table: "enrolments",
+          "parent column": "id",
+          "foreign column": "class_id",
+          identifier: null,
+        },
+      ],
+    },
+    {
+      name: "Other Students",
+      columns: [
+        {
+          name: "id",
+          type: "INTEGER()",
+          "primary key": true,
+          "foreign key": false,
+        },
+        {
+          name: "fname",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "lname",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "age",
+          type: "INTEGER()",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "email",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+      ],
+      relationships: [
+        {
+          table: "societies",
+          "parent column": "id",
+          "foreign column": "student_id",
+          identifier: null,
+        },
+        {
+          table: "enrolments",
+          "parent column": "id",
+          "foreign column": "student_id",
+          identifier: null,
+        },
+      ],
+    },
+    {
+      name: "Other Societies",
+      columns: [
+        {
+          name: "id",
+          type: "INTEGER()",
+          "primary key": true,
+          "foreign key": false,
+        },
+        {
+          name: "name",
+          type: "VARCHAR(length=30)",
+          "primary key": false,
+          "foreign key": false,
+        },
+        {
+          name: "student_id",
+          type: "INTEGER()",
+          "primary key": false,
+          "foreign key": true,
+        },
+      ],
+      relationships: [],
+    },
+    {
+      name: "Other Enrolments",
+      columns: [
+        {
+          name: "id",
+          type: "INTEGER()",
+          "primary key": true,
+          "foreign key": false,
+        },
+        {
+          name: "class_id",
+          type: "INTEGER()",
+          "primary key": false,
+          "foreign key": true,
+        },
+        {
+          name: "student_id",
+          type: "INTEGER()",
+          "primary key": false,
+          "foreign key": true,
+        },
+      ],
+      relationships: [],
+    },
+  ],
+};
+
 export default function Content() {
   const classes = useStyles();
-
+  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
+  const updateContext = () => setCurrentDb(TempDb);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -71,6 +269,8 @@ export default function Content() {
           sunt perspiciatis hic assumenda iusto vero ullam temporibus doloremque
           repudiandae laborum natus.
         </Typography>
+        <Button color="primary" variant="outlined" onClick={updateContext}>Update Context Test</Button>
+        <Typography>{JSON.stringify(currentDb)}</Typography>
         <div className={classes.tableContainer}>
           <ResultsTable />
         </div>

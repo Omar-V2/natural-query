@@ -1,4 +1,5 @@
 import React from "react";
+import { DatabaseContext } from "../App";
 import axios from "../axios";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     margin: theme.spacing(1),
   },
+  backDrop: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
 }));
 
 const WarningText = withStyles({
@@ -34,11 +38,12 @@ const WarningText = withStyles({
 
 export default function FormDialog({ title, open, setOpen }) {
   const classes = useStyles();
+  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
 
-  const [host, setHost] = React.useState("");
-  const [dbName, setDbName] = React.useState("");
-  const [dbLogin, setDbLogin] = React.useState("");
-  const [dbPass, setDbPass] = React.useState("");
+  const [host, setHost] = React.useState("sqldb");
+  const [dbName, setDbName] = React.useState("UCL");
+  const [dbLogin, setDbLogin] = React.useState("postgres");
+  const [dbPass, setDbPass] = React.useState("root");
   const [connErr, setConnErr] = React.useState("");
   const [backDropOpen, setBackDropOpen] = React.useState(false);
 
@@ -60,14 +65,18 @@ export default function FormDialog({ title, open, setOpen }) {
         host: host,
         dbname: dbName,
       });
-
       console.log(response.data);
+      setCurrentDb(response.data);
+      console.log(`currentDB: ${JSON.stringify(currentDb)}`);
       setConnErr("");
-      // also close dialog upon successful connection
+      handleClose();
     } catch (error) {
-      console.log(error.response.data);
-      const errorMessage = error.response.data.message;
-      setConnErr(errorMessage);
+      if (error.response) {
+        console.log(error.response.data);
+        setConnErr(error.response.data.message);
+      } else if (error.request) {
+        setConnErr("Error connecting to server");
+      }
     } finally {
       setBackDropOpen(false);
     }
@@ -99,15 +108,20 @@ export default function FormDialog({ title, open, setOpen }) {
             <Button onClick={handleClose} variant="outlined" color="primary">
               Cancel
             </Button>
-            <Button onClick={handleConfirm} variant="contained" color="primary">
+            <Button
+              onClick={handleConfirm}
+              variant="contained"
+              color="primary"
+              disabled={!(dbName && dbLogin && dbPass && host)}
+            >
               Confirm
             </Button>
           </DialogActions>
           <WarningText color="primary">{connErr}</WarningText>
         </DialogContent>
-        {/* <Backdrop open={backDropOpen}>
+        <Backdrop className={classes.backDrop} open={backDropOpen}>
           <CircularProgress color="primary" />
-        </Backdrop> */}
+        </Backdrop>
       </Dialog>
     </div>
   );

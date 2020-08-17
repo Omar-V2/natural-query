@@ -1,4 +1,5 @@
 import React from "react";
+import { DatabaseContext } from "../App";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -14,6 +15,7 @@ import { FiKey } from "react-icons/fi";
 import { MdRefresh } from "react-icons/md";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+
 import {
   Typography,
   IconButton,
@@ -57,13 +59,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Table({ tableName }) {
+function Table({ tableName, attributes }) {
   const classes = useStyles();
-  const attibutes = [
-    { name: "ID", type: "INT64", pk: true, fk: false },
-    { name: "First Name", type: "VARCHAR(30)", pk: false, fk: true },
-    { name: "last name", type: "VARCHAR(30)", pk: false, fk: false },
-  ];
+  // const attributes = [];
   const [isOpen, setOpen] = React.useState(false);
   const handleClick = () => setOpen(!isOpen);
   return (
@@ -77,16 +75,16 @@ function Table({ tableName }) {
       </ListItem>
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {attibutes.map((attr, index) => (
-              <ListItem key={index} className={classes.nested} dense>
-                <ListItemText primary={`${attr.name}: ${attr.type}`} />
-                {attr.pk || attr.fk ? (
-                  <ListItemIcon className={classes.iconTextContainer}>
-                    <Typography>{attr.pk ? "PK" : "FK"}</Typography>
-                    <FiKey className={classes.iconLeft} />
-                  </ListItemIcon>
-                ) : null}
-              </ListItem>
+          {attributes.map((attr, index) => (
+            <ListItem key={index} className={classes.nested} dense>
+              <ListItemText primary={`${attr.name}: ${attr.type}`} />
+              {attr["primary key"] || attr["foreign key"] ? (
+                <ListItemIcon className={classes.iconTextContainer}>
+                  <Typography>{attr["primary key"] ? "PK" : "FK"}</Typography>
+                  <FiKey className={classes.iconLeft} />
+                </ListItemIcon>
+              ) : null}
+            </ListItem>
           ))}
         </List>
       </Collapse>
@@ -95,8 +93,16 @@ function Table({ tableName }) {
 }
 
 export default function Schema({ dbName }) {
+  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
   const classes = useStyles();
-  const tables = ["Students", "Staff", "Classes", "Societies"];
+  // const tables = ["Students", "Staff", "Classes", "Societies"];
+  let tables;
+  let columns;
+  if (Object.keys(currentDb).length !== 0) {
+    tables = currentDb.tables.map((table) => table.name);
+    columns = currentDb.tables.map((table) => table.columns);
+  }
+
   return (
     <React.Fragment>
       <SimpleSelect />
@@ -105,7 +111,7 @@ export default function Schema({ dbName }) {
         component="nav"
         subheader={
           <ListSubheader disableSticky className={classes.iconTextContainer}>
-            <RiTableLine className={classes.icon} /> Schema
+            <RiTableLine className={classes.icon} /> {currentDb.database} Schema
           </ListSubheader>
         }
       >
@@ -113,9 +119,16 @@ export default function Schema({ dbName }) {
           relationship, built in functions
           Use css circles to create color identifier
           Also include a legend somewhere - probably above title */}
-        {tables.map((table, index) => (
-          <Table key={index} tableName={table} />
-        ))}
+
+        {tables ? (
+          tables.map((table, index) => (
+            <Table key={index} tableName={table} attributes={columns[index]} />
+          ))
+        ) : (
+          <Typography paragraph style={{ margin: 10 }}>
+            Connect a database and the schema will appear here!
+          </Typography>
+        )}
         <Divider />
       </List>
     </React.Fragment>
@@ -124,7 +137,7 @@ export default function Schema({ dbName }) {
 
 function SimpleSelect() {
   const classes = useStyles();
-  const [db, setDb] = React.useState("UCL CS");
+  const [db, setDb] = React.useState("");
 
   const handleChange = (event) => {
     setDb(event.target.value);

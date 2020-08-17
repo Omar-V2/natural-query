@@ -19,6 +19,7 @@ class Database(Resource):
     def get(self):
         # get database by name
         databases = DB["databases"]
+        # can use combo string of host, dbname, and login as unique identifier
         # return json_util.loads(databases.find())
         return [x for x in databases.find({}, {"_id": False})]
         # return {"hello": "world"}
@@ -46,6 +47,12 @@ class Database(Resource):
         # consider returning insert(update) _id here
         # could then use in get method above - get db by _id
         return info, 201
+
+    # def post(self):
+    #     """
+    #     Method for updating the relationship keywords based on UI graph component.
+    #     """
+    #     pass
 
 
 class Query(Resource):
