@@ -149,7 +149,7 @@ function SimpleSelect() {
       console.log(response.data);
     };
     getDbs();
-  }, [db]);
+  }, [db, currentDb]);
 
   const handleChange = (event) => {
     setDb(event.target.value);

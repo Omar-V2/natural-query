@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import MaterialTable from "material-table";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -32,7 +33,13 @@ const useStyles = makeStyles({
 });
 
 function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+  return {
+    dessert: name,
+    calories: calories,
+    fat: fat,
+    carbs: carbs,
+    protein: protein,
+  };
 }
 
 const rows = [
@@ -104,6 +111,29 @@ export default function ResultsTable() {
         onChangeRowsPerPage={handleChangeRowsPerPage}
         rowsPerPage={rowsPerPage}
       />
+    </Paper>
+  );
+}
+
+export function ResultsTableMaterial() {
+  const classes = useStyles();
+  const columns = headers.map((header) => ({
+    title: header,
+    field: header.toLowerCase(),
+  }));
+  return (
+    <Paper className={classes.root}>
+      <MaterialTable
+        columns={columns}
+        data={rows}
+        options={{
+          padding: "dense",
+          search: false,
+          title: false,
+          toolbar: true,
+          exportButton: true,
+        }}
+      ></MaterialTable>
     </Paper>
   );
 }

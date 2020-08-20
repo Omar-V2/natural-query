@@ -1,4 +1,4 @@
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, ProgrammingError
 from analyse import Analyser
 from pprint import pprint
 from pymongo import MongoClient
@@ -91,10 +91,22 @@ class Query(Resource):
         takes in a sql query as a string, executes the query
         and returns the data response as json
         """
-        pass
+        db_args = ["user", "password", "host", "dbname", "query"]
+        parser = reqparse.RequestParser()
+        [parser.add_argument(arg, type=str) for arg in db_args]
+        args = parser.parse_args()
+
+        try:
+            analyser = Analyser(
+                args["user"], args["password"], args["host"], args["dbname"]
+            )
+            analyser.execute_query(args["query"])
+        except ProgrammingError:
+            abort(404, message="error in SQL query")
 
 
 api.add_resource(Database, "/db")
+api.add_resource(Query, "/query")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

@@ -2,6 +2,8 @@ version: "3"
 services:
   python:
     build: ./server
+    environment:
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./server:/usr/src/app
     ports:

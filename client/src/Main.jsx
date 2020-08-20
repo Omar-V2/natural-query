@@ -9,7 +9,7 @@ import Schema from "./components/Schema";
 import ButtonAppBar from "./components/AppBar";
 import Search from "./components/Search";
 import Relationships from "./components/Relationships";
-import ResultsTable from "./components/ResultTable";
+import ResultsTable, { ResultsTableMaterial } from "./components/ResultTable";
 import { Button } from "@material-ui/core";
 
 const drawerWidth = 275;
@@ -470,7 +470,8 @@ export default function Content() {
         </Button>
         <Typography>{JSON.stringify(currentDb)}</Typography>
         <div className={classes.tableContainer}>
-          <ResultsTable />
+          {/* <ResultsTable /> */}
+          <ResultsTableMaterial />
         </div>
       </main>
     </div>

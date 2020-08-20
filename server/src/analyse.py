@@ -15,11 +15,15 @@ class Analyser:
         self.tables = self.inspector.get_table_names()
         self.relationships = self._get_relationships()
 
-    def connect(self):
-        pass
+    def execute_query(self, sql_query):
+        with self.engine.connect() as connection:
+            result = connection.execute(sql_query)
+            columns = result.keys()
+            rows = result.fetchall()
+            print(rows)
+            print(columns)
 
-    def dissconnect(self):
-        pass
+        self.engine.dispose()
 
     def _get_table_info(self, table_name):
         """
@@ -70,8 +74,10 @@ class Analyser:
         return [self._get_table_info(table) for table in all_tables]
 
     def get_all_info(self):
-        return {
+        info = {
             "database": self.db_name,
             "host": self.host,
             "tables": self._get_all_tables_info(),
         }
+        self.engine.dispose()
+        return info
