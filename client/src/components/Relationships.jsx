@@ -23,7 +23,6 @@ import { ArcherContainer, ArcherElement } from "react-archer";
 import { deepOrange, grey, blue } from "@material-ui/core/colors";
 import { MdEdit } from "react-icons/md";
 import axios from "../axios";
-import { join } from "lodash";
 
 const graphCode = {
   nodes: [
@@ -155,7 +154,7 @@ export default function Relationships() {
           ))
         ) : (
           <Typography paragraph style={{ margin: 10 }}>
-            Connect a database and the relationships will appear here!
+            Connect or select a database and the relationships will appear here!
           </Typography>
         )}
       </List>

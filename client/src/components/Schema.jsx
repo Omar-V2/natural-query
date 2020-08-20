@@ -23,6 +23,7 @@ import {
   ListSubheader,
 } from "@material-ui/core";
 import { FaDatabase } from "react-icons/fa";
+import axios from "../axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,7 +127,7 @@ export default function Schema({ dbName }) {
           ))
         ) : (
           <Typography paragraph style={{ margin: 10 }}>
-            Connect a database and the schema will appear here!
+            Connect or select a database and the schema will appear here!
           </Typography>
         )}
         <Divider />
@@ -137,11 +138,27 @@ export default function Schema({ dbName }) {
 
 function SimpleSelect() {
   const classes = useStyles();
-  const [db, setDb] = React.useState("");
+  const [db, setDb] = React.useState(-1);
+  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
+  const [availableDbs, setAvailableDbs] = React.useState([]);
+
+  React.useEffect(() => {
+    const getDbs = async () => {
+      const response = await axios.get("/db");
+      setAvailableDbs(response.data);
+      console.log(response.data);
+    };
+    getDbs();
+  }, [db]);
 
   const handleChange = (event) => {
     setDb(event.target.value);
+    console.log(event.target.value);
+    console.log(availableDbs[event.target.value]);
+    setCurrentDb(availableDbs[event.target.value]);
   };
+
+  const dbNames = availableDbs.map((db) => db.database);
 
   return (
     <React.Fragment>
@@ -150,13 +167,11 @@ function SimpleSelect() {
           <FaDatabase /> Current DB
         </InputLabel>
         <Select value={db} onChange={handleChange}>
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={"UCL CS"}>UCL CS</MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {dbNames.map((name, index) => (
+            <MenuItem key={index} value={index}>
+              {name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <IconButton className={classes.icon}>

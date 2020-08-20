@@ -17,12 +17,9 @@ DB = CLIENT["natural-query"]
 
 class Database(Resource):
     def get(self):
-        # get database by name
+        # get all databases
         databases = DB["databases"]
         return [db for db in databases.find({}, {"_id": False})], 200
-        # can use combo string of host, dbname, and login as unique identifier
-        # return json_util.loads(databases.find())
-        # return [x for x in databases.find({}, {"_id": False})]
 
     def post(self):
         db_args = ["user", "password", "host", "dbname"]
@@ -41,11 +38,11 @@ class Database(Resource):
                 {"$setOnInsert": {"tables": info["tables"]}},
                 upsert=True,
             )
-            # matched_count = update_result.matched_count
-            # if matched_count == 1:
-            #     abort(
-            #         404, message="You are already connected to this database",
-            #     )
+            matched_count = update_result.matched_count
+            if matched_count == 1:
+                abort(
+                    404, message="You are already connected to this database",
+                )
             return info, 201
         # incorrect combination of db creds
         except OperationalError:
