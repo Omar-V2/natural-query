@@ -1,4 +1,6 @@
 import React from "react";
+import { DatabaseContext } from "../App";
+import makeGraph, { getRelations, makeNodeMap, getJoinInfo } from "./Graph";
 import {
   makeStyles,
   List,
@@ -7,6 +9,7 @@ import {
   IconButton,
   Button,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import cloneDeep from "lodash/cloneDeep";
 import Dialog from "@material-ui/core/Dialog";
@@ -19,10 +22,29 @@ import { RiArrowLeftRightLine } from "react-icons/ri";
 import { ArcherContainer, ArcherElement } from "react-archer";
 import { deepOrange, grey, blue } from "@material-ui/core/colors";
 import { MdEdit } from "react-icons/md";
+import axios from "../axios";
+import { join } from "lodash";
+
+const graphCode = {
+  nodes: [
+    { id: 0, label: "staff", color: "#9e9e9e" },
+    { id: 1, label: "classes", color: "#9e9e9e" },
+    { id: 2, label: "students", color: "#9e9e9e" },
+    { id: 3, label: "societies", color: "#9e9e9e" },
+    // { id: 4, label: "enrolments", color: "#9e9e9e" },
+  ],
+  edges: [
+    { id: 0, from: 0, to: 1, label: "" },
+    { id: 1, from: 1, to: 4, label: "" },
+    { id: 2, from: 2, to: 3, label: "" },
+    { id: 3, from: 2, to: 4, label: "" },
+  ],
+};
 
 const graphSettings = {
   graph: {
     nodes: [
+      { id: 0, label: "Student", color: grey[500] },
       { id: 1, label: "Student", color: grey[500] },
       { id: 2, label: "Staff", color: grey[500] },
       { id: 3, label: "Class", color: grey[500] },
@@ -101,18 +123,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Relationships() {
   const classes = useStyles();
+  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const editClicked = () => setDialogOpen(true);
-  const relations = [
-    {
-      parent: "Students",
-      children: [{ name: "Class" }, { name: "Societies" }],
-    },
-    {
-      parent: "Staff",
-      children: [{ name: "Class" }],
-    },
-  ];
+  let relations;
+  if (Object.keys(currentDb).length !== 0) {
+    relations = getRelations(currentDb);
+    console.log(JSON.stringify(relations));
+  }
   return (
     <React.Fragment>
       <List
@@ -122,15 +140,24 @@ export default function Relationships() {
             <ListSubheader className={classes.iconTextContainer}>
               <RiArrowLeftRightLine className={classes.icon} /> Relationships
             </ListSubheader>
-            <IconButton onClick={editClicked}>
+            <IconButton
+              onClick={editClicked}
+              disabled={relations ? false : true}
+            >
               <MdEdit />
             </IconButton>
           </div>
         }
       >
-        {relations.map((relation, index) => (
-          <Relationship key={index} relation={relation} />
-        ))}
+        {relations ? (
+          relations.map((relation, index) => (
+            <Relationship key={index} relation={relation} />
+          ))
+        ) : (
+          <Typography paragraph style={{ margin: 10 }}>
+            Connect a database and the relationships will appear here!
+          </Typography>
+        )}
       </List>
       <RelationshipDialog
         open={dialogOpen}
@@ -142,14 +169,45 @@ export default function Relationships() {
 }
 
 function RelationshipDialog({ open, setOpen, title }) {
-  const initialGraphData = graphSettings.graph;
   const graphOptions = graphSettings.options;
-  const [startGraph, setStartGraph] = React.useState(initialGraphData);
-  const [graphData, setGraphData] = React.useState(initialGraphData);
+  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
+  const [nodeMap, setNodeMap] = React.useState();
+  const [startGraph, setStartGraph] = React.useState({});
+  const [graphData, setGraphData] = React.useState({});
+
+  React.useEffect(() => {
+    if (Object.keys(currentDb).length !== 0) {
+      const graph = makeGraph(currentDb);
+      const nodeMap = makeNodeMap(currentDb, true);
+      setNodeMap(nodeMap);
+      setStartGraph(graph);
+      setGraphData(graph);
+    }
+  }, [currentDb]);
+
   const handleClose = () => setOpen(false);
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setStartGraph(graphData);
+    // console.log(nodeMap);
+    const joinInfo = getJoinInfo(graphData, nodeMap);
+    try {
+      const response = await axios.put("/db", {
+        dbname: currentDb.database,
+        host: currentDb.host,
+        joinInfo: joinInfo,
+      });
+      setCurrentDb(response.data);
+      console.log(response.data);
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request.data);
+      }
+    }
     setOpen(false);
+    console.log(graphData);
+    console.log(JSON.stringify(joinInfo));
   };
   const handleCancel = () => {
     setGraphData(startGraph);

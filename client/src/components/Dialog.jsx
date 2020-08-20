@@ -67,7 +67,6 @@ export default function FormDialog({ title, open, setOpen }) {
       });
       console.log(response.data);
       setCurrentDb(response.data);
-      console.log(`currentDB: ${JSON.stringify(currentDb)}`);
       setConnErr("");
       handleClose();
     } catch (error) {

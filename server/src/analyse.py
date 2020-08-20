@@ -8,6 +8,7 @@ class Analyser:
         self, user, password, host, dbname, dialect="postgresql", driver="psycopg2"
     ):
         self.db_name = dbname
+        self.host = host
         conn_string = f"{dialect}+{driver}://{user}:{password}@{host}/{dbname}"
         self.engine = create_engine(conn_string, echo=None)
         self.inspector = inspect(self.engine)
@@ -69,4 +70,8 @@ class Analyser:
         return [self._get_table_info(table) for table in all_tables]
 
     def get_all_info(self):
-        return {"database": self.db_name, "tables": self._get_all_tables_info()}
+        return {
+            "database": self.db_name,
+            "host": self.host,
+            "tables": self._get_all_tables_info(),
+        }
