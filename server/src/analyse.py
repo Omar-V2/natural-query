@@ -1,4 +1,5 @@
 from collections import defaultdict
+import bcrypt
 from sqlalchemy import inspect, create_engine
 from pprint import pprint
 
@@ -9,6 +10,9 @@ class Analyser:
     ):
         self.db_name = dbname
         self.host = host
+        self.user = user
+        self.password = password
+        # self.hashed_pass = bcrypt.hashpw(str.encode(password), bcrypt.gensalt())
         conn_string = f"{dialect}+{driver}://{user}:{password}@{host}/{dbname}"
         self.engine = create_engine(conn_string, echo=None)
         self.inspector = inspect(self.engine)
@@ -20,10 +24,9 @@ class Analyser:
             result = connection.execute(sql_query)
             columns = result.keys()
             rows = result.fetchall()
-            print(rows)
-            print(columns)
-
+            data = [{k: v for k, v in zip(columns, row)} for row in rows]
         self.engine.dispose()
+        return columns, data
 
     def _get_table_info(self, table_name):
         """
@@ -73,10 +76,14 @@ class Analyser:
         all_tables = self.tables
         return [self._get_table_info(table) for table in all_tables]
 
+    def get_pass(self):
+        return self.password
+
     def get_all_info(self):
         info = {
             "database": self.db_name,
             "host": self.host,
+            "user": self.user,
             "tables": self._get_all_tables_info(),
         }
         self.engine.dispose()

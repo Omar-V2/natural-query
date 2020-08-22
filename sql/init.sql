@@ -38,3 +38,13 @@ CREATE TABLE IF NOT EXISTS Enrolments (
     FOREIGN KEY(class_id) REFERENCES Classes(id),
     FOREIGN KEY(student_id) REFERENCES Students(id)
 );
+
+INSERT INTO Students (fname, lname, age, email) VALUES('Omar', 'D', 23, 'omar@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Aziz', 'D', 25, 'aziz@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Sam', 'S', 19, 'sam@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Harry', 'G', 23, 'harry@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Tom', 'F', 23, 'tom@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('James', 'E', 23, 'james@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Nabil', 'S', 23, 'nabil@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Yasir', 'H', 23, 'yasir@gmail.com');
+INSERT INTO Students (fname, lname, age, email) VALUES('Alan', 'S', 23, 'alan@gmail.com');

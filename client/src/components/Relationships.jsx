@@ -193,6 +193,7 @@ function RelationshipDialog({ open, setOpen, title }) {
       const response = await axios.put("/db", {
         dbname: currentDb.database,
         host: currentDb.host,
+        user: currentDb.user,
         joinInfo: joinInfo,
       });
       setCurrentDb(response.data);
