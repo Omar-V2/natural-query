@@ -44,7 +44,7 @@ class Database(Resource):
                 {
                     "$setOnInsert": {
                         "tables": info["tables"],
-                        "password": analyser.get_pass(),  # probs change this to actual password
+                        "password": analyser.get_pass(),
                     }
                 },
                 upsert=True,
