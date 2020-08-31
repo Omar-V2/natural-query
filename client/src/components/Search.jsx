@@ -1,21 +1,24 @@
 import React from "react";
 import CreatableSelect from "react-select/creatable";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { makeStyles, Button } from "@material-ui/core";
+import { makeStyles, Button, Typography } from "@material-ui/core";
 import { DatabaseContext } from "../App";
 import { axiosNLP } from "../axios";
 import { QueryContext } from "../Main";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "row",
     maxWidth: "75%",
     margin: "auto",
   },
   searchBar: {
     width: "100%",
     marginRight: theme.spacing(3),
+  },
+  barButtonContainer: {
+    display: "flex",
+    flexDirection: "row",
   },
 }));
 
@@ -135,8 +138,8 @@ export default function Search() {
   ];
 
   return (
-    <>
-      <div className={classes.root}>
+    <div className={classes.root}>
+      <div className={classes.barButtonContainer}>
         <CreatableSelect
           className={classes.searchBar}
           options={groupedOptions}
@@ -160,12 +163,16 @@ export default function Search() {
           Go
         </Button>
       </div>
-      <div className={classes.root}>{JSON.stringify(optionsValues)}</div>
+      {/* <div>{JSON.stringify(optionsValues)}</div> */}
       {query ? (
-        <div className={classes.root}>
-          <SyntaxHighlighter language="sql">{query}</SyntaxHighlighter>
+        <div>
+          <br/>
+          <Typography>Generated SQL</Typography>
+          <SyntaxHighlighter language="sql" style={a11yDark}>
+            {query}
+          </SyntaxHighlighter>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
