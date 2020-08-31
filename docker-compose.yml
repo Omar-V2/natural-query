@@ -12,6 +12,13 @@ services:
     depends_on:
       - sqldb
       - mongodb
+  node:
+    build: ./nlp
+    volumes:
+      - ./nlp:/usr/src/app
+    ports:
+      - 5001:5001
+    restart: on-failure
   sqldb:
     image: "postgres"
     ports:

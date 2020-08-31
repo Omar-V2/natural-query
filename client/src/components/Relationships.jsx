@@ -140,7 +140,7 @@ export default function Relationships() {
               <RiArrowLeftRightLine className={classes.icon} /> Relationships
             </ListSubheader>
             <IconButton
-              onClick={editClicked}
+              onClick={() => editClicked()}
               disabled={relations ? false : true}
             >
               <MdEdit />
@@ -228,10 +228,10 @@ function RelationshipDialog({ open, setOpen, title }) {
             setGraphData={setGraphData}
           />
           <DialogActions>
-            <Button onClick={handleCancel} variant="outlined" color="primary">
+            <Button onClick={() => handleCancel()} variant="outlined" color="primary">
               Cancel
             </Button>
-            <Button onClick={handleConfirm} variant="contained" color="primary">
+            <Button onClick={() => handleConfirm()} variant="contained" color="primary">
               Confirm
             </Button>
           </DialogActions>

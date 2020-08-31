@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Schema from "./components/Schema";
 import ButtonAppBar from "./components/AppBar";
 import Search from "./components/Search";
@@ -78,21 +77,21 @@ export default function Content() {
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
-        <Search />
-        <input
+        <QueryContext.Provider value={[query, setQuery]}>
+          <Search />
+          <div className={classes.tableContainer}>
+            <ResultsTableMaterial />
+          </div>
+        </QueryContext.Provider>
+        {/* <input
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
         />
         <Button color="primary" variant="outlined" onClick={submitQuery}>
           submit query
         </Button>
-        <br />
+        <br /> */}
         {/* <Typography>{JSON.stringify(currentDb)}</Typography> */}
-        <div className={classes.tableContainer}>
-          <QueryContext.Provider value={[query, setQuery]}>
-            <ResultsTableMaterial />
-          </QueryContext.Provider>
-        </div>
       </main>
     </div>
   );

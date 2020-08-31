@@ -104,11 +104,11 @@ export default function FormDialog({ title, open, setOpen }) {
             ))}
           </div>
           <DialogActions>
-            <Button onClick={handleClose} variant="outlined" color="primary">
+            <Button onClick={() => handleClose()} variant="outlined" color="primary">
               Cancel
             </Button>
             <Button
-              onClick={handleConfirm}
+              onClick={() => handleConfirm()}
               variant="contained"
               color="primary"
               disabled={!(dbName && dbLogin && dbPass && host)}

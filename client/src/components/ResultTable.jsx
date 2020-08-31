@@ -59,7 +59,7 @@ export default function ResultsTableMaterial() {
         }}
         options={{
           padding: "dense",
-          search: false,
+          search: true,
           title: false,
           toolbar: true,
           exportButton: true,

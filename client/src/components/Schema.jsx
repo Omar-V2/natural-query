@@ -67,7 +67,7 @@ function Table({ tableName, attributes }) {
   const handleClick = () => setOpen(!isOpen);
   return (
     <React.Fragment>
-      <ListItem button onClick={handleClick}>
+      <ListItem button onClick={() => handleClick()}>
         <ListItemIcon>
           <RiTableLine size="25" />
         </ListItemIcon>

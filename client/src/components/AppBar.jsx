@@ -60,7 +60,7 @@ export default function ButtonAppBar({ title }) {
             color="primary"
             size="small"
             className={classes.firstButton}
-            onClick={handleNewConnection}
+            onClick={() => handleNewConnection()}
           >
             New Connection
             <BsPlug className={classes.buttonIcon} size="18" />
