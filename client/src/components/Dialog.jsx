@@ -40,10 +40,10 @@ export default function FormDialog({ title, open, setOpen }) {
   const classes = useStyles();
   const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
 
-  const [host, setHost] = React.useState("sqldb");
-  const [dbName, setDbName] = React.useState("UCL");
-  const [dbLogin, setDbLogin] = React.useState("postgres");
-  const [dbPass, setDbPass] = React.useState("root");
+  const [host, setHost] = React.useState("");
+  const [dbName, setDbName] = React.useState("");
+  const [dbLogin, setDbLogin] = React.useState("");
+  const [dbPass, setDbPass] = React.useState("");
   const [connErr, setConnErr] = React.useState("");
   const [backDropOpen, setBackDropOpen] = React.useState(false);
 
@@ -104,7 +104,11 @@ export default function FormDialog({ title, open, setOpen }) {
             ))}
           </div>
           <DialogActions>
-            <Button onClick={() => handleClose()} variant="outlined" color="primary">
+            <Button
+              onClick={() => handleClose()}
+              variant="outlined"
+              color="primary"
+            >
               Cancel
             </Button>
             <Button

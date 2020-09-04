@@ -52,13 +52,13 @@ export default function ResultsTableMaterial() {
       <MaterialTable
         columns={makeColumns(tableColumns)}
         data={tableData}
-        // title={`Query returned ${tableData.length} results`}
         title={query}
         localization={{
           body: { emptyDataSourceMessage: "Query results will appear here." },
         }}
         options={{
           padding: "dense",
+          pageSizeOptions: [5, 10],
           search: true,
           title: false,
           toolbar: true,

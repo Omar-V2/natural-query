@@ -1,5 +1,16 @@
 version: "3"
 services:
+  ui:
+    build: ./client
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/usr/src/app
+      - ./usr/src/app/node_modules
+    restart: on-failure
+    depends_on:
+      - python
   python:
     build: ./server
     environment:
