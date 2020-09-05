@@ -1,5 +1,4 @@
 const express = require("express");
-const parseNlp = require("./index");
 const parseNLP = require("./index");
 
 const router = express.Router();
@@ -18,25 +17,35 @@ router.post("/", async (req, res) => {
 const processTokens = async (tokens, queryTemplate) => {
   for (let token of tokens) {
     if (token.__isNew__) {
-      await handleNew(token, queryTemplate);
+      await handleNew(token, tokens, queryTemplate);
     } else {
       handleKnown(token, queryTemplate);
     }
   }
 };
 
-const handleNew = async (token, queryTemplate) => {
-  // greater than - less than will cuase bug here
-  const response = await parseNLP(token.value);
-  console.log(response);
-  // if (response.entities.length > 0) {
-  // }
-  queryTemplate.select.type = response.answer;
-  // console.log(queryTemplate);
-  // classifyColumn(token.value)
+const getLastColumn = (tokens, startIndex) => {
+  for (let i = startIndex; i >= 0; i--) {
+    currentToken = tokens[i];
+    console.log(currentToken);
+    if (currentToken.metaData && currentToken.metaData.type === "column") {
+      console.log("returned", currentToken);
+      return currentToken;
+    }
+  }
 };
 
-const classifyIntent = (token, queryTemplate) => {};
+const handleNew = async (token, tokens, queryTemplate) => {
+  // greater than - less than will cuase bug here
+  if (token.value.startsWith("*")) {
+    handleColumnValue(token, tokens, queryTemplate);
+  } else {
+    const response = await parseNLP(token.value);
+    if (response.answer) {
+      queryTemplate.select.type = response.answer;
+    }
+  }
+};
 
 const handleKnown = (token, queryTemplate) => {
   switch (token.metaData.type) {
@@ -51,7 +60,6 @@ const handleKnown = (token, queryTemplate) => {
       break;
     case "operator":
       hanldeOperator(token, queryTemplate);
-      break;
   }
 };
 
@@ -92,6 +100,20 @@ const hanldeOperator = (token, queryTemplate) => {
   console.log("operator handler triggered");
   const operator = token.value;
   queryTemplate.where.conditions.push({ operator: operator });
+};
+
+const handleColumnValue = (token, tokens, queryTemplate) => {
+  console.log("column value handler triggered");
+  const startIndex = token.index;
+  const parentColumn = getLastColumn(tokens, startIndex);
+  const table = parentColumn.metaData.table;
+  const column = parentColumn.metaData.value;
+  const condition = {
+    column: `${table}.${column}`,
+    operator: "=",
+    value: `'${token.value.substr(1)}'`,
+  };
+  queryTemplate.where.conditions.push(condition);
 };
 
 const buildSelect = (select) => {

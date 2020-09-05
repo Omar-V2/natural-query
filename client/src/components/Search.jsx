@@ -111,8 +111,21 @@ export default function Search() {
     logicalOperators = getLogicalOperators();
   }
 
+  const handleLabel = (option) => {
+    const label = option.label.startsWith("*")
+      ? option.label.substr(1)
+      : option.label;
+    return label;
+  };
+
   const handleSubmit = async () => {
-    const response = await axiosNLP.post("/nlp", { tokens: optionsValues });
+    const optionsWithIndexes = optionsValues.map((option, index) => ({
+      ...option,
+      index: index,
+    }));
+    const response = await axiosNLP.post("/nlp", {
+      tokens: optionsWithIndexes,
+    });
     const queryFromResponse = response.data.query;
     setQuery(queryFromResponse);
     console.log(response.data);
@@ -152,6 +165,7 @@ export default function Search() {
           isOptionSelected={(option, selectValue) =>
             selectValue.some((i) => i === option)
           }
+          getOptionLabel={handleLabel}
           hideSelectedOptions={false}
           styles={customStyles}
         />
@@ -163,10 +177,10 @@ export default function Search() {
           Go
         </Button>
       </div>
-      {/* <div>{JSON.stringify(optionsValues)}</div> */}
+      <div>{JSON.stringify(optionsValues)}</div>
       {query ? (
         <div>
-          <br/>
+          <br />
           <Typography>Generated SQL</Typography>
           <SyntaxHighlighter language="sql" style={a11yDark}>
             {query}
