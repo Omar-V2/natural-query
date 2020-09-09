@@ -65,15 +65,6 @@ export default function ButtonAppBar({ title }) {
             New Connection
             <BsPlug className={classes.buttonIcon} size="18" />
           </Button>
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            className={classes.button}
-          >
-            Manage Databases
-            <MdEdit className={classes.buttonIcon} size="18" />
-          </Button>
         </Toolbar>
       </AppBar>
       <FormDialog

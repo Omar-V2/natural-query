@@ -95,23 +95,61 @@ const getLogicalOperators = () => {
   return [andOperator, orOperator, notOperator];
 };
 
+const checkIdentifiersFilled = (currentDb) => {
+  for (let table of currentDb.tables) {
+    for (let rel of table.relationships) {
+      if (rel.identifier === "") {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
 export default function Search() {
   const [optionsValues, setOptionsValues] = React.useState();
   const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
+  const [fullOptions, setFullOptions] = React.useState([]);
   const [query, setQuery] = React.useContext(QueryContext);
   const classes = useStyles();
   let tables = [];
   let columns = [];
   let keyWords = [];
   let logicalOperators = [];
-  if (Object.keys(currentDb).length > 0) {
-    tables = getTableOptions(currentDb);
-    columns = getColumnOptions(currentDb);
-    keyWords = getKeyWordOptions(currentDb);
-    logicalOperators = getLogicalOperators();
-  }
+  React.useEffect(() => {
+    if (Object.keys(currentDb).length > 0) {
+      tables = getTableOptions(currentDb);
+      columns = getColumnOptions(currentDb);
+      keyWords = getKeyWordOptions(currentDb);
+      logicalOperators = getLogicalOperators();
+      const groupedOptions = [
+        {
+          label: "Tables",
+          options: tables,
+        },
+        {
+          label: "Columns",
+          options: columns,
+        },
+        {
+          label: "Join Key-words",
+          options: keyWords,
+        },
+        {
+          label: "logical operators",
+          options: logicalOperators,
+        },
+      ];
+      if (checkIdentifiersFilled(currentDb)) {
+        setFullOptions(groupedOptions);
+      } else {
+        setFullOptions([]);
+      }
+    }
+  }, [currentDb]);
 
   const handleLabel = (option) => {
+    // use same idea here for word embeddings feature but with ":" instead of "*"
     const label = option.label.startsWith("*")
       ? option.label.substr(1)
       : option.label;
@@ -123,41 +161,45 @@ export default function Search() {
       ...option,
       index: index,
     }));
-    const response = await axiosNLP.post("/nlp", {
-      tokens: optionsWithIndexes,
-    });
-    const queryFromResponse = response.data.query;
-    setQuery(queryFromResponse);
-    console.log(response.data);
+    try {
+      const response = await axiosNLP.post("/nlp", {
+        tokens: optionsWithIndexes,
+      });
+      const queryFromResponse = response.data.query;
+      setQuery(queryFromResponse);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const groupedOptions = [
-    {
-      label: "Tables",
-      options: tables,
-    },
-    {
-      label: "Columns",
-      options: columns,
-    },
-    {
-      label: "Join Key-words",
-      options: keyWords,
-    },
-    {
-      label: "logical operators",
-      options: logicalOperators,
-    },
-  ];
+  // const groupedOptions = [
+  //   {
+  //     label: "Tables",
+  //     options: tables,
+  //   },
+  //   {
+  //     label: "Columns",
+  //     options: columns,
+  //   },
+  //   {
+  //     label: "Join Key-words",
+  //     options: keyWords,
+  //   },
+  //   {
+  //     label: "logical operators",
+  //     options: logicalOperators,
+  //   },
+  // ];
 
   return (
     <div className={classes.root}>
       <div className={classes.barButtonContainer}>
         <CreatableSelect
           className={classes.searchBar}
-          options={groupedOptions}
+          options={fullOptions}
           noOptionsMessage={() =>
-            "Connect or select a database to start querying!"
+            "Connect or select a database to start querying!\n Make sure to complete the relationships section too!"
           }
           value={optionsValues}
           onChange={setOptionsValues}
@@ -172,6 +214,11 @@ export default function Search() {
         <Button
           variant="outlined"
           color="primary"
+          disabled={
+            optionsValues === null ||
+            optionsValues === undefined ||
+            (optionsValues && optionsValues.length === 0)
+          }
           onClick={() => handleSubmit()}
         >
           Go

@@ -1,7 +1,5 @@
 from collections import defaultdict
-import bcrypt
 from sqlalchemy import inspect, create_engine
-from pprint import pprint
 
 
 class Analyser:
@@ -12,7 +10,6 @@ class Analyser:
         self.host = host
         self.user = user
         self.password = password
-        # self.hashed_pass = bcrypt.hashpw(str.encode(password), bcrypt.gensalt())
         conn_string = f"{dialect}+{driver}://{user}:{password}@{host}/{dbname}"
         self.engine = create_engine(conn_string, echo=None)
         self.inspector = inspect(self.engine)

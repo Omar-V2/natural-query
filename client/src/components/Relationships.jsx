@@ -191,9 +191,7 @@ function RelationshipDialog({ open, setOpen, title }) {
     const joinInfo = getJoinInfo(graphData, nodeMap);
     try {
       const response = await axios.put("/db", {
-        dbname: currentDb.database,
-        host: currentDb.host,
-        user: currentDb.user,
+        _id: currentDb._id,
         joinInfo: joinInfo,
       });
       setCurrentDb(response.data);
@@ -228,10 +226,18 @@ function RelationshipDialog({ open, setOpen, title }) {
             setGraphData={setGraphData}
           />
           <DialogActions>
-            <Button onClick={() => handleCancel()} variant="outlined" color="primary">
+            <Button
+              onClick={() => handleCancel()}
+              variant="outlined"
+              color="primary"
+            >
               Cancel
             </Button>
-            <Button onClick={() => handleConfirm()} variant="contained" color="primary">
+            <Button
+              onClick={() => handleConfirm()}
+              variant="contained"
+              color="primary"
+            >
               Confirm
             </Button>
           </DialogActions>
@@ -296,7 +302,7 @@ function Relationship({ relation }) {
   const archerRelations = (children) =>
     children.map((child) => ({
       targetId: child.name,
-      label: child.label,
+      // label: child.label,
       targetAnchor: "left",
       sourceAnchor: "right",
     }));

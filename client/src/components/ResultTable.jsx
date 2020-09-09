@@ -29,9 +29,7 @@ export default function ResultsTableMaterial() {
   React.useEffect(() => {
     const getData = async (queryString) => {
       const response = await axios.post("/query", {
-        dbname: currentDb.database,
-        host: currentDb.host,
-        user: currentDb.user,
+        _id: currentDb._id,
         query: queryString,
       });
       const data = response.data;
