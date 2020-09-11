@@ -1,5 +1,5 @@
 const express = require("express");
-const parseNLP = require("./index");
+const parseNLP = require("./intent-classifier");
 
 const router = express.Router();
 
@@ -156,19 +156,6 @@ const buildQuery = (template) => {
   return query;
 };
 
-const queryTemplate = {
-  select: {
-    columns: new Set(["*"]), // delete "*" when adding new columns
-    type: "",
-  },
-  from: {
-    tables: new Set(),
-  },
-  where: {
-    conditions: [],
-  },
-};
-
 const getTemplate = () => ({
   select: {
     columns: new Set(["*"]), // delete "*" when adding new columns
@@ -181,27 +168,5 @@ const getTemplate = () => ({
     conditions: [],
   },
 });
-
-const query = {
-  select: {
-    column: "age",
-    type: "AVG",
-  },
-  from: {
-    table: "student",
-  },
-  join: {},
-  where: {
-    conditions: [
-      { column: "name", operator: "=", value: "Doe" },
-      {
-        operator: "OR",
-      },
-      { column: "age", operator: ">", value: "25" },
-    ],
-  },
-  group_by: {},
-  order_by: {},
-};
 
 module.exports = router;

@@ -10,8 +10,6 @@ manager.addDocument("en", "How many", "query.select.count");
 manager.addDocument("en", "Number of", "query.select.count");
 manager.addDocument("en", "Count", "query.select.count");
 
-// Sum
-
 //Average
 manager.addDocument("en", "Average", "query.select.average");
 manager.addDocument("en", "Mean", "query.select.average");
@@ -44,8 +42,6 @@ manager.addDocument("en", "smaller than", "query.operator.lt");
 manager.addDocument("en", "below", "query.operator.lt");
 manager.addDocument("en", "under", "query.operator.lt");
 
-// manager.addNamedEntityText("hero", "spiderman", ["en"], ["spiderman"]);
-
 // Train also the NLG
 manager.addAnswer("en", "query.select.count", "COUNT");
 manager.addAnswer("en", "query.select.average", "AVG");
@@ -58,9 +54,6 @@ const parseNLP = async (inputString) => {
   manager.save();
   const response = await manager.process("en", inputString);
   return response;
-  // console.log(`Intent is: ${response.intent}`);
-  // console.log(response);
 };
 
-// parseNLP("min");
 module.exports = parseNLP;
