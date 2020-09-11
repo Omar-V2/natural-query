@@ -204,11 +204,11 @@ export default function Search() {
           Go
         </Button>
       </div>
-      <div>
+      {/* <div>
         {optionsValues
           ? optionsValues.map((option) => <div>{JSON.stringify(option)}</div>)
           : null}
-      </div>
+      </div> */}
       {/* <div>{JSON.stringify(optionsValues)}</div> */}
       {query ? (
         <div>
