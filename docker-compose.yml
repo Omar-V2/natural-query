@@ -41,6 +41,17 @@ services:
     volumes:
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - sql-db-data:/var/lib/postgresql/data
+  sqldb2:
+    image: "postgres"
+    ports:
+      - 5433:5433
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=LSE
+    volumes:
+      - ./sql/init-second.sql:/docker-entrypoint-initdb.d/init.sql
+      - sql-db-data-second:/var/lib/postgresql/data
   mongodb:
     image: "mongo"
     ports:
@@ -53,3 +64,4 @@ services:
 volumes:
   mongo-db-data:
   sql-db-data:
+  sql-db-data-second:

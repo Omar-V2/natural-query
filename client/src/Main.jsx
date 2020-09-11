@@ -1,5 +1,4 @@
 import React from "react";
-import { DatabaseContext } from "./App";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,7 +8,6 @@ import ButtonAppBar from "./components/AppBar";
 import Search from "./components/Search";
 import Relationships from "./components/Relationships";
 import ResultsTableMaterial from "./components/ResultTable";
-import { Button } from "@material-ui/core";
 
 const drawerWidth = 275;
 
@@ -47,16 +45,7 @@ export const QueryContext = React.createContext();
 
 export default function Content() {
   const classes = useStyles();
-  const [currentDb, setCurrentDb] = React.useContext(DatabaseContext);
   const [query, setQuery] = React.useState("");
-  const [inputText, setInputText] = React.useState("");
-
-  const submitQuery = () => {
-    setQuery(inputText);
-    // make api call to nlp service
-    // const response = axios.get("/nlp", options)
-    //  const data = response.data (raw SQL)
-  };
 
   return (
     <div className={classes.root}>
@@ -83,15 +72,6 @@ export default function Content() {
             <ResultsTableMaterial />
           </div>
         </QueryContext.Provider>
-        {/* <input
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-        />
-        <Button color="primary" variant="outlined" onClick={submitQuery}>
-          submit query
-        </Button>
-        <br /> */}
-        {/* <Typography>{JSON.stringify(currentDb)}</Typography> */}
       </main>
     </div>
   );

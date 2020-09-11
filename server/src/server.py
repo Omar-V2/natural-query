@@ -1,6 +1,5 @@
 from sqlalchemy.exc import OperationalError, ProgrammingError
 from analyse import Analyser
-from pprint import pprint
 from pymongo import MongoClient
 from flask import Flask
 from flask_restful import Resource, Api, reqparse, abort
@@ -69,9 +68,6 @@ class Database(Resource):
                 404,
                 message="Could not connect to a database with the provided credentials",
             )
-        # # consider returning insert(update) _id here
-        # # could then use in get method above - get db by _id
-        # return info, 201
 
     def put(self):
         """

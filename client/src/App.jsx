@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import Content from "./Main";
-// import DatabaseContext from "./utils/context";
 
 export const DatabaseContext = React.createContext({});
 

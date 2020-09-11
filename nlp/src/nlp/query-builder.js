@@ -164,12 +164,9 @@ const queryTemplate = {
   from: {
     tables: new Set(),
   },
-  join: false,
   where: {
     conditions: [],
   },
-  group_by: {},
-  order_by: {},
 };
 
 const getTemplate = () => ({
@@ -180,12 +177,9 @@ const getTemplate = () => ({
   from: {
     tables: new Set(),
   },
-  join: false,
   where: {
     conditions: [],
   },
-  group_by: {},
-  order_by: {},
 });
 
 const query = {

@@ -172,26 +172,6 @@ export default function Search() {
       console.log(error);
     }
   };
-
-  // const groupedOptions = [
-  //   {
-  //     label: "Tables",
-  //     options: tables,
-  //   },
-  //   {
-  //     label: "Columns",
-  //     options: columns,
-  //   },
-  //   {
-  //     label: "Join Key-words",
-  //     options: keyWords,
-  //   },
-  //   {
-  //     label: "logical operators",
-  //     options: logicalOperators,
-  //   },
-  // ];
-
   return (
     <div className={classes.root}>
       <div className={classes.barButtonContainer}>
@@ -224,7 +204,12 @@ export default function Search() {
           Go
         </Button>
       </div>
-      <div>{JSON.stringify(optionsValues)}</div>
+      <div>
+        {optionsValues
+          ? optionsValues.map((option) => <div>{JSON.stringify(option)}</div>)
+          : null}
+      </div>
+      {/* <div>{JSON.stringify(optionsValues)}</div> */}
       {query ? (
         <div>
           <br />
